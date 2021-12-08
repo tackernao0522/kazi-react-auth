@@ -290,4 +290,153 @@ class Home extends Component {
 export default Home
 ```
 
+## Passport Authentication Login Page
 
++ `src/components/Login.jsx`コンポーネントを作成<br>
+
+```
+import { Component } from "react";
+
+class Login extends Component {
+  render() {
+    return (
+      <div>
+        <h1>Login Page</h1>
+      </div>
+    )
+  }
+}
+
+export default Login
+```
+
++ `src/components/Register.jsx`コンポーネントを作成<br>
+
+```
+import React, { Component } from 'react'
+
+class Register extends Component {
+  render() {
+    return (
+      <div>
+        <h1>Register Page</h1>
+      </div>
+    )
+  }
+}
+
+export default Register
+```
+
++ `src/components/Forget.jsx`コンポーネントを作成<br>
+
+```
+import React, { Component } from 'react'
+
+export class Forget extends Component {
+  render() {
+    return (
+      <div>
+        <h1>Forget Page</h1>
+      </div>
+    )
+  }
+}
+
+export default Forget
+```
+
++ `src/components/Profile.jsx`コンポーネントを作成<br>
+
++ `src/common/Header.jsx`を編集<br>
+
+```
+import { Component } from 'react'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import Home from '../components/Home'
+import Login from '../components/Login'
+import Register from '../components/Register'
+import Nav from './Nav'
+
+class Header extends Component {
+  render() {
+    return (
+      <Router>
+        <div>
+          <Nav />
+          <Switch>
+            <Route exact path="/" component={ Home } />
+            <Route exact path="/login" component={ Login } />
+            <Route exact path="/register" component={ Register } />
+            <Route exact path="/forget" component={ Forget } />
+          </Switch>
+        </div>
+      </Router>
+    )
+  }
+}
+
+export default Header
+```
+
++ `src/common/Nav.jsx`を編集<br>
+
+```
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+
+class Nav extends Component {
+  render() {
+    return (
+      <div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <a class="navbar-brand" href="#">
+            Easy Learning
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarText"
+            aria-controls="navbarText"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">
+                  Home <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  Profile
+                </a>
+              </li>
+            </ul>
+            <span class="navbar-text">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                  <Link class="nav-link" to="/login">
+                    Login
+                  </Link>
+                </li>
+                <li class="nav-item">
+                  <Link class="nav-link" to="/register">
+                    Register
+                  </Link>
+                </li>
+              </ul>
+            </span>
+          </div>
+        </nav>
+      </div>
+    )
+  }
+}
+
+export default Nav
+```

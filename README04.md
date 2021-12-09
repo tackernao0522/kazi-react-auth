@@ -437,3 +437,152 @@ ReactDOM.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 ```
+
+## 236 Login after profile Part2
+
++ `src/router/HeaderRouter.jsx`を編集<br>
+
+```
+import axios from 'axios'
+import React, { Component } from 'react'
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import Nav from '../common/Nav'
+import Forget from '../components/Forget'
+import Home from '../components/Home'
+import Login from '../components/Login'
+import Profile from '../components/Profile'
+import Register from '../components/Register'
+
+class HeaderRouter extends Component {
+  state = {
+    user: {},
+  }
+
+  componentDidMount() {
+    // Login User Credentials
+    axios
+      .get('/user')
+      .then((response) => {
+        this.setUser(response.data)
+      })
+      .catch((error) => {
+        return console.log(error)
+      })
+  }
+
+  setUser = (user) => {
+    this.setState({ user: user })
+  }
+
+  render() {
+    return (
+      <Router>
+        <div>
+          <Nav user={this.state.user} setUser={this.setUser} /> // 編集
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/forget" component={Forget} />
+            <Route exact path="/profile" component={Profile} />
+          </Switch>
+        </div>
+      </Router>
+    )
+  }
+}
+
+export default HeaderRouter
+```
+
++ `src/components/Login.jsx`を編集<br>
+
+```
+import axios from 'axios'
+import { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min'
+import { PrimaryButton } from './atoms/button/PrimaryButton'
+
+class Login extends Component {
+  state = {
+    email: '',
+    password: '',
+    message: '',
+  }
+
+  // Login Form Submit
+  formSubmit = (e) => {
+    e.preventDefault()
+
+    const data = {
+      email: this.state.email,
+      password: this.state.password,
+    }
+
+    axios
+      .post('/login', data)
+      .then((response) => {
+        localStorage.setItem('token', response.data.token)
+          this.setState({
+            loggedIn: true,
+          })
+          this.props.setUser(response.data.user); // 追記
+      })
+      .catch((error) => console.log(error))
+  }
+
+  render() {
+    // After Login Redirect to Profile
+    if (this.state.loggedIn) {
+      return <Redirect to={'/profile'} />
+    }
+
+    return (
+      <div>
+        <br />
+        <br />
+        <div className="row">
+          <div className="jumbotron col-lg-4 offset-lg-4">
+            <h3 className="text-center">Login Account</h3>
+            <form onSubmit={this.formSubmit}>
+              <div className="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter email"
+                  required
+                  onChange={(e) => {
+                    this.setState({ email: e.target.value })
+                  }}
+                />
+              </div>
+              <div className="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  className="form-control"
+                  placeholder="Password"
+                  required
+                  onChange={(e) => {
+                    this.setState({ password: e.target.value })
+                  }}
+                />
+              </div>
+              <PrimaryButton>Login</PrimaryButton>
+              <br />
+              Forget My Password <Link to="/forget">Click Here</Link>
+            </form>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+export default Login
+```

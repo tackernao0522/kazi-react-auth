@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min'
 import { PrimaryButton } from './atoms/button/PrimaryButton'
 
 class Login extends Component {
@@ -21,11 +22,21 @@ class Login extends Component {
 
     axios
       .post('/login', data)
-      .then((response) => console.log(response))
+      .then((response) => {
+        localStorage.setItem('token', response.data.token)
+          this.setState({
+            loggedIn: true,
+          })
+      })
       .catch((error) => console.log(error))
   }
 
   render() {
+    // After Login Redirect to Profile
+    if (this.state.loggedIn) {
+      return <Redirect to={'/profile'} />
+    }
+
     return (
       <div>
         <br />

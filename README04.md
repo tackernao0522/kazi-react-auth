@@ -243,7 +243,7 @@ ReactDOM.render(
 reportWebVitals();
 ```
 
-# 235 Storage Token
+## 235 Storage Token
 
 + `src/components/Login.jsx`を編集<br>
 
@@ -334,4 +334,106 @@ class Login extends Component {
 }
 
 export default Login
+```
+
+## 236 Login after profile Part1
+
++ `src/router/HeaderRouter.jsx`を編集<br>
+
+```
+import axios from 'axios'
+import React, { Component } from 'react'
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import Nav from '../common/Nav'
+import Forget from '../components/Forget'
+import Home from '../components/Home'
+import Login from '../components/Login'
+import Profile from '../components/Profile'
+import Register from '../components/Register'
+
+class HeaderRouter extends Component {
+  state = {
+    user: {},
+  }
+
+  componentDidMount() {
+    // Login User Credentials
+    axios
+      .get('/user')
+      .then((response) => {
+        this.setUser(response.data)
+      })
+      .catch((error) => {
+        return console.log(error)
+      })
+  }
+
+  setUser = (user) => {
+    this.setState({user: user})
+  }
+
+  render() {
+    return (
+      <Router>
+        <div>
+          <Nav />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/forget" component={Forget} />
+            <Route exact path="/profile" component={Profile} />
+          </Switch>
+        </div>
+      </Router>
+    )
+  }
+}
+
+export default HeaderRouter
+```
+
++ `src/common/Header.jsx`を編集<br>
+
+```
+import { Component } from 'react'
+import HeaderRouter from '../router/HeaderRouter'
+
+class Header extends Component {
+  render() {
+    return (
+      <HeaderRouter />
+    )
+  }
+}
+
+export default Header
+```
+
++ `src/index.js`を編集<br>
+
+```
+import axios from 'axios';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Header from './common/Header';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
+
+// set main base url
+axios.defaults.baseURL = 'http://localhost/api';
+//Bearer Token Save
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token'); // 追記
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Header />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
 ```

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { PrimaryButton } from './atoms/button/PrimaryButton'
 
 class Login extends Component {
   state = {
@@ -60,9 +61,7 @@ class Login extends Component {
                   }}
                 />
               </div>
-              <button type="submit" className="btn btn-primary btn-block">
-                Login
-              </button>
+              <PrimaryButton>Login</PrimaryButton>
               <br />
               Forget My Password <Link to="/forget">Click Here</Link>
             </form>

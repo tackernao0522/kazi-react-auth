@@ -1,8 +1,12 @@
+import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Header from './common/Header';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+
+// set main base url
+axios.defaults.baseURL = 'http://localhost/api';
 
 ReactDOM.render(
   <React.StrictMode>

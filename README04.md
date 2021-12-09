@@ -586,3 +586,100 @@ class Login extends Component {
 
 export default Login
 ```
+
+## Authentication : Profile data
+
++ `src/router/HeaderRouter.jsx`を編集<br>
+
+```
+import axios from 'axios'
+import React, { Component } from 'react'
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import Nav from '../common/Nav'
+import Forget from '../components/Forget'
+import Home from '../components/Home'
+import Login from '../components/Login'
+import Profile from '../components/Profile'
+import Register from '../components/Register'
+
+class HeaderRouter extends Component {
+  state = {
+    user: {},
+  }
+
+  componentDidMount() {
+    // Login User Credentials
+    axios
+      .get('/user')
+      .then((response) => {
+        this.setUser(response.data)
+      })
+      .catch((error) => {
+        return console.log(error)
+      })
+  }
+
+  setUser = (user) => {
+    this.setState({ user: user })
+  }
+
+  render() {
+    return (
+      <Router>
+        <div>
+          <Nav user={this.state.user} setUser={this.setUser} />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/forget" component={Forget} />
+            <Route
+              exact
+              path="/profile"
+              component={ () => <Profile user={this.state.user} />} // 編集
+            />
+          </Switch>
+        </div>
+      </Router>
+    )
+  }
+}
+
+export default HeaderRouter
+```
+
++ `src/components/Profile.jsx`を編集<br>
+
+```
+import React, { Component } from 'react'
+
+class Profile extends Component {
+  render() {
+    let name
+    let email
+
+    if (this.props.user) {
+      name = this.props.user.name
+      email = this.props.user.email
+    }
+
+    return (
+      <div>
+        <br />
+        <br />
+        <div className="row">
+          <div className="jumbotron col-lg-4 offset-lg-4">
+            <h3 className="text-center">User Profile</h3>
+            <ul className="list-group">
+              <li className="list-group-item">Name : {name}</li>
+              <li className="list-group-item">Email : {email}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+export default Profile
+```

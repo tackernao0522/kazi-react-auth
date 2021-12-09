@@ -39,7 +39,11 @@ class HeaderRouter extends Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/forget" component={Forget} />
-            <Route exact path="/profile" component={Profile} />
+            <Route
+              exact
+              path="/profile"
+              component={ () => <Profile user={this.state.user} />}
+            />
           </Switch>
         </div>
       </Router>

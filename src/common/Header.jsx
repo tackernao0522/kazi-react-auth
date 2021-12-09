@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { HeaderRouter } from '../router/HeaderRouter'
+import HeaderRouter from '../router/HeaderRouter'
 
 class Header extends Component {
   render() {

@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 
 // set main base url
 axios.defaults.baseURL = 'http://localhost/api';
+//Bearer Token Save
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
 
 ReactDOM.render(
   <React.StrictMode>

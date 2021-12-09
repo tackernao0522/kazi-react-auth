@@ -26,14 +26,14 @@ class HeaderRouter extends Component {
   }
 
   setUser = (user) => {
-    this.setState({user: user})
+    this.setState({ user: user })
   }
 
   render() {
     return (
       <Router>
         <div>
-          <Nav />
+          <Nav user={this.state.user} setUser={this.setUser} />
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />

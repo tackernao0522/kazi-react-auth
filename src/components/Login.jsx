@@ -34,9 +34,9 @@ class Login extends Component {
 
   render() {
     // After Login Redirect to Profile
-    if (this.state.loggedIn) {
-      return <Redirect to={'/profile'} />
-    }
+    // if (this.state.loggedIn) {
+    //   return <Redirect to={'/profile'} />
+    // }
 
     // Show Error Message
     let error = ''
@@ -48,6 +48,10 @@ class Login extends Component {
           </div>
         </div>
       )
+    }
+
+    if (localStorage.getItem('token')) {
+      return <Redirect to={'/profile'} />
     }
 
     return (

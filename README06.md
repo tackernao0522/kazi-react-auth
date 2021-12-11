@@ -607,3 +607,283 @@ class Reset extends Component {
 
 export default Reset
 ```
+
+## 244 Authentication : Protect Url
+
++ `src/components/Profile.jsx`を編集<br>
+
+```
+import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
+
+class Profile extends Component {
+  render() {
+    let name
+    let email
+
+    if (this.props.user) {
+      name = this.props.user.name
+      email = this.props.user.email
+    }
+
+    if (!localStorage.getItem('token')) {
+      return <Redirect to={'/login'} />
+    }
+
+    return (
+      <div>
+        <br />
+        <br />
+        <div className="row">
+          <div className="jumbotron col-lg-4 offset-lg-4">
+            <h3 className="text-center">User Profile</h3>
+            <ul className="list-group">
+              <li className="list-group-item">Name : {name}</li>
+              <li className="list-group-item">Email : {email}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+export default Profile
+```
+
++ `src/components/Login.jsx`を編集<br>
+
+```
+import axios from 'axios'
+import { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min'
+import { PrimaryButton } from './atoms/button/PrimaryButton'
+
+class Login extends Component {
+  state = {
+    email: '',
+    password: '',
+    message: '',
+  }
+
+  // Login Form Submit
+  formSubmit = (e) => {
+    e.preventDefault()
+
+    const data = {
+      email: this.state.email,
+      password: this.state.password,
+    }
+
+    axios
+      .post('/login', data)
+      .then((response) => {
+        localStorage.setItem('token', response.data.token)
+        this.setState({
+          loggedIn: true,
+        })
+        this.props.setUser(response.data.user)
+      })
+      .catch((error) => this.setState({ message: error.response.data.message }))
+  }
+
+  render() {
+    // After Login Redirect to Profile
+    if (this.state.loggedIn) {
+      return <Redirect to={'/profile'} />
+    }
+
+    // Show Error Message
+    let error = ''
+    if (this.state.message) {
+      error = (
+        <div>
+          <div className="alert alert-danger" role="alert">
+            {this.state.message}
+          </div>
+        </div>
+      )
+    }
+
+    if (localStorage.getItem('token')) {
+      return <Redirect to={'/profile'} />
+    }
+
+    return (
+      <div>
+        <br />
+        <br />
+        <div className="row">
+          <div className="jumbotron col-lg-4 offset-lg-4">
+            <h3 className="text-center">Login Account</h3>
+            <form onSubmit={this.formSubmit}>
+              {error}
+              <div className="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter email"
+                  required
+                  onChange={(e) => {
+                    this.setState({ email: e.target.value })
+                  }}
+                />
+              </div>
+              <div className="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  className="form-control"
+                  placeholder="Password"
+                  required
+                  onChange={(e) => {
+                    this.setState({ password: e.target.value })
+                  }}
+                />
+              </div>
+              <PrimaryButton>Login</PrimaryButton>
+              <br />
+              Forget My Password <Link to="/forget">Click Here</Link>
+            </form>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+export default Login
+```
+
++ `src/components/Register.jsx`を編集<br>
+
+```
+import axios from 'axios'
+import React, { Component } from 'react'
+import { Link, Redirect } from 'react-router-dom'
+import { PrimaryButton } from './atoms/button/PrimaryButton'
+
+class Register extends Component {
+  state = {
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    message: '',
+  }
+
+  // Register Form Submit
+  formSubmit = (e) => {
+    e.preventDefault()
+
+    const data = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password_confirmation: this.state.password_confirmation,
+    }
+
+    axios
+      .post('/register', data)
+      .then((response) => {
+        localStorage.setItem('token', response.data.token)
+        this.setState({
+          loggedIn: true,
+        })
+        this.props.setUser(response.data.user)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  render() {
+    // After Register Redirect to Profile
+    if (this.state.loggedIn) {
+      return <Redirect to={'/profile'} />
+    }
+
+    if (localStorage.getItem('token')) {
+      return <Redirect to={'/'} />
+    }
+
+    return (
+      <div>
+        <br />
+        <br />
+        <div className="row">
+          <div className="jumbotron col-lg-4 offset-lg-4">
+            <h3 className="text-center">Register Account</h3>
+            <form onSubmit={this.formSubmit}>
+              <div className="form-group">
+                <label for="exampleInputEmail1">User Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  className="form-control"
+                  placeholder="Enter Name"
+                  required
+                  onChange={(e) => {
+                    this.setState({ name: e.target.value })
+                  }}
+                />
+              </div>
+              <div className="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  placeholder="Enter email"
+                  required
+                  onChange={(e) => {
+                    this.setState({ email: e.target.value })
+                  }}
+                />
+              </div>
+              <div className="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  className="form-control"
+                  placeholder="Password"
+                  required
+                  onChange={(e) => {
+                    this.setState({ password: e.target.value })
+                  }}
+                />
+              </div>
+              <div className="form-group">
+                <label for="exampleInputPassword1">Confirm Password</label>
+                <input
+                  type="password"
+                  name="password_confirmation"
+                  className="form-control"
+                  placeholder="Confirm Password"
+                  required
+                  onChange={(e) => {
+                    this.setState({ password_confirmation: e.target.value })
+                  }}
+                />
+              </div>
+              <PrimaryButton>Register</PrimaryButton>
+              <br />
+              Have an Accout? <Link to="/login">Login Here</Link>
+              <br />
+              Forget My Password <Link to="/forget">Click Here</Link>
+            </form>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+export default Register
+```

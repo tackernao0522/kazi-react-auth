@@ -7,6 +7,7 @@ import Home from '../components/Home'
 import Login from '../components/Login'
 import Profile from '../components/Profile'
 import Register from '../components/Register'
+import Reset from '../components/Reset'
 
 class HeaderRouter extends Component {
   state = {
@@ -51,6 +52,7 @@ class HeaderRouter extends Component {
               )}
             />
             <Route exact path="/forget" component={Forget} />
+            <Route exact path="/reset/:id" component={Reset} />
             <Route
               exact
               path="/profile"

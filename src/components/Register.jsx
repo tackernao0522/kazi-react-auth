@@ -17,7 +17,7 @@ class Register extends Component {
     e.preventDefault()
 
     const data = {
-      name: this.state.email,
+      name: this.state.name,
       email: this.state.email,
       password: this.state.password,
       password_confirmation: this.state.password_confirmation,

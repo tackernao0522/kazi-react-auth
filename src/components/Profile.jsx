@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 
 class Profile extends Component {
   render() {
@@ -8,6 +9,10 @@ class Profile extends Component {
     if (this.props.user) {
       name = this.props.user.name
       email = this.props.user.email
+    }
+
+    if (!localStorage.getItem('token')) {
+      return <Redirect to={'/login'} />
     }
 
     return (

@@ -5,7 +5,7 @@ import axios from 'axios'
 export class Forget extends Component {
   state = {
     email: '',
-    message: ''
+    message: '',
   }
 
   // Forget Form Submit
@@ -16,17 +16,30 @@ export class Forget extends Component {
       email: this.state.email,
     }
 
-    axios.post('/forgetpassword', data)
-    .then((response) => {
-      console.log(response)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+    axios
+      .post('/forgetpassword', data)
+      .then((response) => {
+        this.setState({ message: response.data.message })
+        document.getElementById('forgetform').reset()
+      })
+      .catch((error) => {
+        this.setState({ message: error.response.data.message })
+      })
   }
 
-
   render() {
+    // Show Error Message
+    let error = ''
+    if (this.state.message) {
+      error = (
+        <div>
+          <div className="alert alert-danger" role="alert">
+            {this.state.message}
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div>
         <br />
@@ -34,7 +47,8 @@ export class Forget extends Component {
         <div className="row">
           <div className="jumbotron col-lg-4 offset-lg-4">
             <h3 className="text-center">Forget Password</h3>
-            <form onSubmit={this.formSubmit}>
+            <form onSubmit={this.formSubmit} id="forgetform">
+              {error}
               <div className="form-group">
                 <label for="exampleInputEmail1">Email address</label>
                 <input

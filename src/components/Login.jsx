@@ -24,18 +24,30 @@ class Login extends Component {
       .post('/login', data)
       .then((response) => {
         localStorage.setItem('token', response.data.token)
-          this.setState({
-            loggedIn: true,
-          })
-          this.props.setUser(response.data.user);
+        this.setState({
+          loggedIn: true,
+        })
+        this.props.setUser(response.data.user)
       })
-      .catch((error) => console.log(error))
+      .catch((error) => this.setState({ message: error.response.data.message }))
   }
 
   render() {
     // After Login Redirect to Profile
     if (this.state.loggedIn) {
       return <Redirect to={'/profile'} />
+    }
+
+    // Show Error Message
+    let error = ''
+    if (this.state.message) {
+      error = (
+        <div>
+          <div className="alert alert-danger" role="alert">
+            {this.state.message}
+          </div>
+        </div>
+      )
     }
 
     return (
@@ -46,6 +58,7 @@ class Login extends Component {
           <div className="jumbotron col-lg-4 offset-lg-4">
             <h3 className="text-center">Login Account</h3>
             <form onSubmit={this.formSubmit}>
+              {error}
               <div className="form-group">
                 <label for="exampleInputEmail1">Email address</label>
                 <input
